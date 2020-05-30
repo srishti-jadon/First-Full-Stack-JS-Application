@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+
+        <div id="header">
+            <div id="logo">TYP.</div>
+            <div id="search_box">
+                <input id="search_bar" type="text" placeholder="Search" name="search">
+                <button id="search_icon" onclick="search_value()"><i class="fa fa-search" aria-hidden="true"></i></button>
+            </div>
+            <a id="login_icon" href="#">
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="box">
+            <div id="content">
+                <div id="profile_box">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        profileList = [];
+        var profile_boxElement = document.getElementById('profile_box');
+
+        //code to fetch profile list
+        var url = `http://localhost:8080/`;
+        var promiseOfResponse = fetch(url);
+        promiseOfResponse.then(response => {
+
+            //this will execute only when promise is fulfilled
+            if (response.status == 200) {
+                var promiseOfData = response.json();
+                promiseOfData.then(jsonData => {
+                    profileList = jsonData;
+                    render();
+                });
+            }
+        });
+
+        function search_value() {
+
+            var search_barElement = document.getElementById('search_bar');
+
+            var search_id = search_barElement.value;
+            console.log(search_id);
+
+            //code to fetch profile list
+            var url = `http://localhost:8080/?q=${search_id}`;
+            var promiseOfResponse = fetch(url);
+            promiseOfResponse.then(response => {
+
+                //this will execute only when promise is fulfilled
+                if (response.status == 200) {
+                    var promiseOfData = response.json();
+                    promiseOfData.then(jsonData => {
+                        profileList = jsonData;
+                        render();
+                    });
+                }
+            });
+
+        }
+
+        function render() {
+            var outputHTML = "";
+            for (var i = 0; i < profileList.length; i++) {
+                var student = profileList[i];
+                outputHTML += `
+                            <div class="profile">
+                                        <div class="profile_photo">
+                                            <img src="WhatsApp Image 2020-05-28 at 12.12.15.jpeg" alt="profile picture>">
+                                        </div>
+                                        <div class="profile_content">
+                                            <div class="name">${student.name}</div>
+                                            <div class="branch">${student.branch}</div>
+                                            <div class="college">${student.college}</div>
+                                            <div class="contact_links">
+                                                <a class="sub_links" href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                                                <a class="sub_links" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+                                                <a class="sub_links" href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                                <a class="sub_links" href="#"><i class="fa fa-github-square" aria-hidden="true"></i></a>
+                                            </div>
+                                            <button> View Profile</button>
+                                        </div>
+                            </div>
+                        `;
+            }
+            profile_boxElement.innerHTML = outputHTML;
+        }
+    </script>
+</body>
+
+</html>
