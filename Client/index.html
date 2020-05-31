@@ -18,23 +18,24 @@
                 <input id="search_bar" type="text" placeholder="Search" name="search">
                 <button id="search_icon" onclick="search_value()"><i class="fa fa-search" aria-hidden="true"></i></button>
             </div>
-            <a id="login_icon" href="#">
+            <div id="logout_icon" href="#">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
-            </a>
+                <a id="logout_text" href="log_in.html">Logout</a>
+            </div>
         </div>
         <div id="box">
             <div id="content">
                 <div id="profile_box">
-
                 </div>
-
             </div>
+
         </div>
     </div>
 
     <script>
         profileList = [];
         var profile_boxElement = document.getElementById('profile_box');
+        var boxElement = document.getElementById("box");
 
         //code to fetch profile list
         var url = `http://localhost:8080/`;
@@ -56,10 +57,10 @@
             var search_barElement = document.getElementById('search_bar');
 
             var search_id = search_barElement.value;
-            console.log(search_id);
 
             //code to fetch profile list
             var url = `http://localhost:8080/?q=${search_id}`;
+            search_barElement.value = "";
             var promiseOfResponse = fetch(url);
             promiseOfResponse.then(response => {
 
@@ -76,30 +77,101 @@
         }
 
         function render() {
+
             var outputHTML = "";
             for (var i = 0; i < profileList.length; i++) {
                 var student = profileList[i];
-                outputHTML += `
-                            <div class="profile">
-                                        <div class="profile_photo">
-                                            <img src="WhatsApp Image 2020-05-28 at 12.12.15.jpeg" alt="profile picture>">
+                outputHTML += ` 
+                                        <div class="profile">
+                                                    <div class="profile_photo">
+                                                        <img src="${student.photo}" alt="profile picture>">
+                                                    </div>
+                                                    <div class="profile_content">
+                                                        <div class="name">${student.name}</div>
+                                                        <div class="college">${student.college}</div>
+                                                        <div class="contact_links">
+                                                            <a class="sub_links" href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                                                            <a class="sub_links" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+                                                            <a class="sub_links" href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                                            <a class="sub_links" href="#"><i class="fa fa-github-square" aria-hidden="true"></i></a>
+                                                        </div>
+                                                        <button onclick="view_profile_page(${i}) " > View Profile</button>
+                                                    </div>
                                         </div>
-                                        <div class="profile_content">
-                                            <div class="name">${student.name}</div>
-                                            <div class="branch">${student.branch}</div>
-                                            <div class="college">${student.college}</div>
-                                            <div class="contact_links">
-                                                <a class="sub_links" href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
-                                                <a class="sub_links" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
-                                                <a class="sub_links" href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                                                <a class="sub_links" href="#"><i class="fa fa-github-square" aria-hidden="true"></i></a>
-                                            </div>
-                                            <button> View Profile</button>
-                                        </div>
-                            </div>
-                        `;
+                                    
+                            `;
             }
+
             profile_boxElement.innerHTML = outputHTML;
+
+        }
+
+        function view_profile_page(index) {
+            var user_info = profileList[index];
+
+            var result_page = `
+                                                
+
+                                                    <div id="user_profile_box">
+                                                        <div id="user_profile_photo">
+                                                            <img id=" user_img" src="${user_info.photo}" alt="Profile Photo">
+                                                        </div>
+                                                        <div id="user_profile_content">
+                                                            <div id="user_name">${user_info.name}</div>
+                                                            <div id="user_contact_links">
+                                                                <a class="user_sub_links" href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a>
+                                                                <a class="user_sub_links" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>
+                                                                <a class="user_sub_links" href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                                                <a class="user_sub_links" href="#"><i class="fa fa-github-square" aria-hidden="true"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="user_main_content">
+                                                        <div id="user_designation">${user_info.designation}</div>
+
+                                                        <div id="user_decsription_box">
+                                                            <div id="user_desc_head">Description</div>
+                                                            <div id="user_desc_text">${user_info.description}</div>
+                                                        </div>
+
+                                                        <div id="user_skillDisplay_box">
+                                                            <div class="user_skill_box">
+                                                                <div class="user_skill_button">Javascript</div>
+                                                                <div class="user_skill_button">NodeJS</div>
+                                                                <div class="user_skill_button">ExpressJS</div>
+                                                                <div class="user_skill_button">ReactJS</div>
+                                                                <div class="user_skill_button">Vanilla JS</div>
+                                                                <div class="user_skill_button">MongoDB</div>
+                                                                <div class="user_skill_button">HTML</div>
+                                                                <div class="user_skill_button">CSS</div>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="user_project_box">
+                                                            <div id="user_project_video">
+                                                                <video controls>
+                                                                    <source src="${user_info.video}" type="video/mp4">
+                                                                </video>
+                                                            </div>
+                                                            <div id="user_project_details">
+                                                                <div id="user_project_head">Project</div>
+                                                                <div id="user_project_description">${user_info.project_description}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="user_button_box">
+                                                            <button class="user_btn">See Demo</button>
+                                                            <button class="user_btn">View Code</button>
+                                                        </div>
+
+
+                                                    </div>
+                                                
+                                `;
+
+            profile_boxElement.innerHTML = result_page
         }
     </script>
 </body>

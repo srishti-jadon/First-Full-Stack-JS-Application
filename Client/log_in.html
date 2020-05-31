@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TYP Login</title>
+    <link rel="stylesheet" href="login_style.css">
+</head>
+
+<body>
+    <div id="header">
+        <div id="logo">TYP.</div>
+    </div>
+
+    <div id="container">
+        <form id="new-item-form">
+            <img id="typ_picture" src="Assets/Screenshot (523).png" alt="The Youth Project">
+            <h1 id="form_head">Login</h1>
+
+            <div class="form-elements">
+                <label for="email_input" class="design">Email</label>
+                <input id="email_input" class="design_input" type="email" placeholder="email">
+            </div>
+            <div class="form-elements">
+                <label for="password_Input" class="design">Password</label>
+                <input id="password_Input" class="design_input" type="password" placeholder="password">
+            </div>
+        </form>
+        <div id="log_in">
+            <button class="log_btn" onclick="check_input()"> Login </button>
+        </div>
+    </div>
+
+    <script>
+        profileList = [];
+
+        //code to fetch profile list
+        var url = `http://localhost:8080/`;
+        var promiseOfResponse = fetch(url);
+        promiseOfResponse.then(response => {
+
+            //this will execute only when promise is fulfilled
+            if (response.status == 200) {
+                var promiseOfData = response.json();
+                promiseOfData.then(jsonData => {
+                    profileList = jsonData;
+
+
+                });
+            }
+        });
+
+
+        function check_input() {
+
+            var email_inputElement = document.getElementById('email_input');
+            var password_InputElement = document.getElementById('password_Input');
+
+
+            for (var i = 0; i < profileList.length; i++) {
+                student = profileList[i];
+
+                if (email_inputElement.value == student.email && password_InputElement.value == student.password) {
+
+                    alert("Login successful!!");
+                    location.href = "index.html";
+
+                    email_inputElement.value = "";
+                    password_InputElement.value = "";
+
+                    return
+
+                } else if (email_inputElement.value.length == 0 || password_InputElement.value.length == 0) {
+                    alert("Enter email/password");
+                    return
+                }
+
+            }
+            alert("Invalid email/password ");
+
+        }
+    </script>
+
+</html>
